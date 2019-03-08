@@ -55,6 +55,8 @@
 */
 window.onload = init;
 
+var puzzleCells;
+
 function init() {
       //insert title for the first puzzle
       document.getElementById("puzzleTitle").innerHTML = "Puzzle 1";
@@ -67,7 +69,12 @@ function init() {
       for (var i = 0; i < puzzleButtons.length; i++) {
             puzzleButtons[i].onclick = swapPuzzle;
       }
+      setupPuzzle();
 }
+
+document.addEventListener("mouseup", endBackground);
+
+var cellBackground;
 
 function swapPuzzle(e) {
 
@@ -86,15 +93,46 @@ function swapPuzzle(e) {
             case "puzzle2":
                   document.getElementById("puzzle").innerHTML = drawPuzzle(puzzle2Hint, puzzle2Rating, puzzle2);
                   break;
-            default:
+            case "puzzle3":
+                  document.getElementById("puzzle").innerHTML = drawPuzzle(puzzle3Hint, puzzle3Rating, puzzle3);
                   break;
+      }
+      setupPuzzle();
+}
+
+function setupPuzzle() {
+      //match all of the data cells in the puzzle
+      puzzleCells = document.querySelectorAll("table#hanjieGrid td");
+
+      //set the initial color of each cell to gold
+      for (var i = 0; 1 < puzzleCells.length; i++) {
+            puzzleCells[i].style.backgroundColor = "rgb(233, 207, 29)";
+            //set cell background color in response to the mouse down event
+            puzzleCells[i].onmousedown = setBackground;
       }
 }
 
 
+function setBackground(e) {
+      cellBackground = "rgb(101, 101, 101)";
+      e.target.style.backgroundColor = cellBackground;
 
+      //create an event listener for every puzzle puzzle cell
+      for (var i = 0; i < puzzleCells.length; i++) {
+            puzzleCells[i].addEventListener("mouseenter", extendBackground);
+      }
+}
 
+function extendBackground(e) {
+      e.target.style.backgroundColor = cellBackground;
+}
 
+function endBackground() {
+      //remove envent listener for every puzzle cell
+      for (var i = 0; i < puzzleCells.length; i++) {
+            puzzleCells[i].removeEventListener("mouseenter", extendBackground);
+      }
+}
 
 /* ================================================================= */
 
